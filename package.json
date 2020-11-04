@@ -1,0 +1,25 @@
+{
+  "name": "homework_3_template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:api": "jest tests/api.test.js",
+    "test:websocket": "jest tests/websocket.test.js --detectOpenHandles",
+    "test:websocket2": "jest tests/websocket.test.js --detectOpenHandles",
+    "lint": "eslint ./websocketServer.js && eslint ./apiServer.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jest": "^26.6.1",
+    "redis": "^3.0.2",
+    "redis-mock": "^0.53.0",
+    "supertest": "^6.0.0",
+    "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.1"
+  }
+}
