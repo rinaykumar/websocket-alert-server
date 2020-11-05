@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "name": "Api",
+      "setup": "npm install",
+      "run": "npm run test:api",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 25
+    },
+    {
+      "name": "Websocket 1",
+      "setup": "npm install",
+      "run": "npm run test:websocket",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 25
+    },
+    {
+      "name": "Websocket 2",
+      "setup": "npm install",
+      "run": "npm run test:websocket2",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 25
+    },
+    {
+      "name": "Eslint",
+      "setup": "npm install",
+      "run": "npm run lint",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 25
+    }
+  ]
+}
