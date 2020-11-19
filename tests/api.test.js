@@ -34,11 +34,12 @@ describe("Default Route Should be failed code 404", () => {
       .get(`/api/doSomething?userId=${random1}&text=${random2}`)
       .then((response) => {
         expect(response.statusCode).toBe(200);
-        expect(publishMock.mock.calls.length).toBe(2);
+        expect(publishMock.mock.calls.length).toBe(1); // Changed from 2 to 1
         expect(publishMock.mock.calls[0][0]).toBe('testPublish');
         const data1 = JSON.parse(publishMock.mock.calls[0][1]);
         expect(data1.userId).toBe(random1);
         expect(data1.text).toBe(random2);
+        done(); // Added for it to complete
       });
   });
 });
