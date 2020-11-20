@@ -8,7 +8,7 @@ const wss = new WebSocket.Server({port: 4000});
 const subscriber = redis.createClient();
 
 let clients = [];
-let client;
+//let client;
 
 subscriber.subscribe('testPublish');
 
@@ -18,15 +18,15 @@ subscriber.on('message', (channel, message) => {
   wss.clients.clear();
 });
 
-const broadcast = (data, user) => {
-  const textToSend = JSON.stringify(data);
-  //clients[0].send('adsafa');
-  // for (let i = 0; i < clients.length; i++) {
-  //   if (clients[i] === user) {
-  //     clients[i].send(textToSend);
-  //   }
-  // }
-}
+// const broadcast = (data, user) => {
+//   const textToSend = JSON.stringify(data);
+//   //clients[0].send('adsafa');
+//   // for (let i = 0; i < clients.length; i++) {
+//   //   if (clients[i] === user) {
+//   //     clients[i].send(textToSend);
+//   //   }
+//   // }
+// }
 
 wss.on('connection', (ws) => {
   console.log('Client has connected');
@@ -38,7 +38,6 @@ wss.on('connection', (ws) => {
   //   console.log(user);
   //   client = JSON.parse(user);
   // })
-
   // ws.on('close', () => {
   //   console.log('Client has disconnected')
   // });
@@ -49,4 +48,3 @@ wss.on('connection', (ws) => {
   });
 
 });
-wss.clients.forEach(client => client.send('test'))
