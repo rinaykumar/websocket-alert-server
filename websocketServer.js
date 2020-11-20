@@ -46,5 +46,4 @@ wss.on('connection', (ws) => {
     console.log(rawData);
     //broadcast(rawData, client.userId);
   });
-
 });
