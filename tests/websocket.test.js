@@ -51,7 +51,7 @@ describe("Default Route Should be failed code 404", () => {
       userId: id1,
       text: id2,
     }));
-    //expect(ws1.send.mock.calls.length).toBe(0);
+    expect(ws1.send.mock.calls.length).toBe(0);
     ws1.userId = id1;
     onCallback(null, JSON.stringify({
       userId: id1,
@@ -82,7 +82,7 @@ describe("Default Route Should be failed code 404", () => {
       userId: '12345',
       text: 'hello',
     }));
-   // expect(wsMockInstance.send.mock.calls.length).toBe(0);
+    expect(wsMockInstance.send.mock.calls.length).toBe(0);
     messageOnCallback(JSON.stringify({ userId: '12345' }));
     redisOnCallback(null, JSON.stringify({
       userId: '12345',

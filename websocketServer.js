@@ -2,19 +2,19 @@ const WebSocket = require('ws');
 const redis = require('redis');
 
 // WebSocket Server
-const wss = new WebSocket.Server({port: 4000});
+const wss = new WebSocket.Server({ port: 4000 });
 
 // Redis Client
 const subscriber = redis.createClient();
 
 let clients = [];
-//let client;
+let client = 'asd';
 
 subscriber.subscribe('testPublish');
 
 subscriber.on('message', (channel, message) => {
-  console.log("Message: " + message);
-  wss.clients.forEach(client => client.send());
+  console.log('Message: ' + message);
+  wss.clients.forEach((client) => client.send());
   wss.clients.clear();
 });
 
