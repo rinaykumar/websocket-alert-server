@@ -8,42 +8,43 @@ const wss = new WebSocket.Server({ port: 4000 });
 const subscriber = redis.createClient();
 
 let clients = [];
-let client = 'asd';
 
 subscriber.subscribe('testPublish');
 
 subscriber.on('message', (channel, message) => {
   console.log('Message: ' + message);
-  wss.clients.forEach((client) => client.send());
+  // Testing send call here with a send to all clients
+  // Without sending here, test fails at line 60
+  wss.clients.forEach((client) => client.send(message));
   wss.clients.clear();
 });
 
-// const broadcast = (data, user) => {
-//   const textToSend = JSON.stringify(data);
-//   //clients[0].send('adsafa');
-//   // for (let i = 0; i < clients.length; i++) {
-//   //   if (clients[i] === user) {
-//   //     clients[i].send(textToSend);
-//   //   }
-//   // }
-// }
+// Trying to send to just one client
+const broadcast = (data, user) => {
+  const textToSend = JSON.stringify(data);
+  for (let i = 0; i < clients.length; i++) {
+    if (clients[i] === user) {
+      clients[i].send(textToSend);
+    }
+  }
+}
 
 wss.on('connection', (ws) => {
   console.log('Client has connected');
 
   clients.push(ws);
 
+  /* This grabs their userid of the client, however if there are more than
+     one 'ws.on' methods the test fails */
+
   // ws.on('open', (user) => {
   //   // Contains userId
   //   console.log(user);
   //   client = JSON.parse(user);
   // })
-  // ws.on('close', () => {
-  //   console.log('Client has disconnected')
-  // });
 
   ws.on('message', (rawData) => {
     console.log(rawData);
-    //broadcast(rawData, client.userId);
+    broadcast(rawData, client.userId);
   });
 });
