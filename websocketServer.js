@@ -7,44 +7,36 @@ const wss = new WebSocket.Server({ port: 4000 });
 // Redis Client
 const subscriber = redis.createClient();
 
+// To store clients
 let clients = [];
 
+// Subcribe to redis channel
 subscriber.subscribe('testPublish');
 
+// Get message from redis channel and send to broadcast function
 subscriber.on('message', (channel, message) => {
   console.log('Message: ' + message);
-  // Testing send call here with a send to all clients
-  // Without sending here, test fails at line 60
-  wss.clients.forEach((client) => client.send(message));
-  wss.clients.clear();
+  const textToSend = JSON.parse(message);
+  broadcast(textToSend, textToSend.userId);
 });
 
-// Trying to send to just one client
-const broadcast = (data, user) => {
-  const textToSend = JSON.stringify(data);
-  for (let i = 0; i < clients.length; i++) {
-    if (clients[i] === user) {
-      clients[i].send(textToSend);
+// Broadcast message from redis channel to specific client
+const broadcast = (textToSend, userToSend) => {
+  wss.clients.forEach((client) => {
+    if (client == clients[userToSend]) {
+      client.send(textToSend);
     }
-  }
-}
+  });
+};
 
+// Websocket server connection 
 wss.on('connection', (ws) => {
   console.log('Client has connected');
 
-  clients.push(ws);
-
-  /* This grabs their userid of the client, however if there are more than
-     one 'ws.on' methods the test fails */
-
-  // ws.on('open', (user) => {
-  //   // Contains userId
-  //   console.log(user);
-  //   client = JSON.parse(user);
-  // })
-
+  // Get message and store userId of client in clients array
   ws.on('message', (rawData) => {
     console.log(rawData);
-    broadcast(rawData, client.userId);
+    const data = JSON.parse(rawData);
+    clients[data.userId] = ws;
   });
 });

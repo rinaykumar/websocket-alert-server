@@ -37,27 +37,35 @@ require('../websocketServer.js');
 
 describe("Default Route Should be failed code 404", () => {
   test("Should connect and listen for redis publish", done => {
+    // This is redis calling .on for subscribing
     expect(subscribeMock.mock.calls.length).toBe(1);
-    expect(onMock.mock.calls.length).toBe(1);
-    const onCallback = onMock.mock.calls[0][1];
+    // this is the wss calling .on
+    expect(wssOnMock.mock.calls.length).toBe(1);
+    const onCallback = wssOnMock.mock.calls[0][1];
     const id1 = makeid(9);
     const id2 = makeid(9);
+    // this is a fake ws instance
     const ws1 = {
-      userId: 'abc',
       send: jest.fn(),
+      on: jest.fn(),
     };
     wssClients.add(ws1);
-    onCallback(null, JSON.stringify({
+    onCallback(ws1); // this triggers the .on of the ws instance (inside wss)
+    expect(wssOnMock.mock.calls.length).toBe(1);
+    const wsClientOnCallback = ws1.on.mock.calls[0][1];
+    // this is a message incoming from the ws client
+    wsClientOnCallback(JSON.stringify({
       userId: id1,
       text: id2,
     }));
     expect(ws1.send.mock.calls.length).toBe(0);
-    ws1.userId = id1;
-    onCallback(null, JSON.stringify({
+    const redisOnMessageMock = onMock.mock.calls[0][1];
+    // this is redis incoming publish with a message ment for user 1
+    redisOnMessageMock(null, JSON.stringify({
       userId: id1,
       text: id2,
     }));
-    expect(ws1.send.mock.calls.length).toBe(1);
+    expect(ws1.send.mock.calls.length).toBe(1); // counts that its 1 call to the ws client
     done();
   });
 
